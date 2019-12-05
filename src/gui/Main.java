@@ -15,6 +15,6 @@ public class Main extends JFrame {
         new Main().setVisible(true);
     }
     private void init(){
-
+        Constrains.addComp(new Parqueadero(), this, new Rectangle(0, 0, 1, 1), 0, 0, new Insets(0, 0, 0, 0), GridBagConstraints.CENTER, GridBagConstraints.NONE);
     }
 }
