@@ -20,5 +20,7 @@ public class Parqueadero extends JPanel {
         g2.fill3DRect(getMinimumSize().width - 30, (int)(getMinimumSize().height * 0.25), 30, (int)(getMinimumSize().height * 0.5), true);
         g2.drawImage(Objects.requireNonNull(Files.image("/recursos/imagenes/ENTRADA.png", -1, 30), "Imagen No Encontrada").getImage(), 6, (int)(getMinimumSize().height * 0.18), this);
         g2.drawImage(Objects.requireNonNull(Files.image("/recursos/imagenes/Salida.png", -1, 30), "Imagen No Encontrada").getImage(), getMinimumSize().width - 68, (int)(getMinimumSize().height * 0.18), this);
+        g2.drawImage(Objects.requireNonNull(Files.image("/recursos/imagenes/parking.jpg", 50, -1), "Imagen No Encontrada").getImage(), 20, 20, this);
+        g2.drawImage(Objects.requireNonNull(Files.image("/recursos/imagenes/parking.jpg", 50, -1), "Imagen No Encontrada").getImage(), getMinimumSize().width - 70, 20, this);
     }
 }
