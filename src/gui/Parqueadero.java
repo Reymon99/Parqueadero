@@ -44,11 +44,21 @@ public class Parqueadero extends JPanel {
         g2.drawImage(Objects.requireNonNull(Files.image("/recursos/imagenes/parking.jpg", 50, -1), "Imagen No Encontrada").getImage(), 20, 20, this);
         g2.drawImage(Objects.requireNonNull(Files.image("/recursos/imagenes/parking.jpg", 50, -1), "Imagen No Encontrada").getImage(), minusWidth(70), 20, this);
     }
+    private void lines(Graphics2D g2){
+        g2.setColor(new Color(219, 210, 11));
+        g2.setStroke(new BasicStroke(4.0f, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_MITER, 10.0f, new float[]{25.0f, 25.0f}, 0.0f));
+        g2.drawLine(pointWidth(11), pointHeight(50) - 2, minusWidth(pointWidth(11)), pointHeight(50) - 2);
+    }
+    private void parkingSpaces(Graphics2D g2){
+
+    }
     @Override
     public void paint(Graphics g) {
         super.paint(g);
         Graphics2D g2 = (Graphics2D) g;
         parking(g2);
         doors(g2);
+        lines(g2);
+        parkingSpaces(g2);
     }
 }
