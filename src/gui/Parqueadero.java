@@ -2,9 +2,16 @@ package gui;
 import tools.Files;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.geom.Ellipse2D;
 import java.util.Objects;
 public class Parqueadero extends JPanel {
     private boolean lleno;
+    private final int widthParking;
+    private final int heightParking;
+    {
+        widthParking = 170;
+        heightParking = 120;
+    }
     public Parqueadero(){
         setMinimumSize(new Dimension(1000, 500));
         setMaximumSize(getMinimumSize());
@@ -50,8 +57,6 @@ public class Parqueadero extends JPanel {
         g2.drawLine(pointWidth(10), pointHeight(50) - 2, minusWidth(pointWidth(10)), pointHeight(50) - 2);
     }
     private void parkingSpaces(Graphics2D g2){
-        g2.setColor(new Color(130, 137, 143));
-        g2.setStroke(new BasicStroke(19.0f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);//Delimita perfectamente los pixeles curvos
         int[] ejesX = new int[]{pointWidth(19), pointWidth(19) + 210, pointWidth(19) + 210 * 2};
         for (int x = 0; x < ejesX.length; x++){
@@ -62,11 +67,21 @@ public class Parqueadero extends JPanel {
         }
     }
     private void parkingSpace(Graphics2D g2, int x, int y){
-        g2.drawLine(x, y, x, y + 120);
-        g2.drawLine(x + 170, y, x + 170, y + 120);
+        g2.setColor(new Color(130, 137, 143));
+        g2.setStroke(new BasicStroke(17.2f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
+        g2.drawLine(x, y, x, y + heightParking);
+        g2.drawLine(x + widthParking, y, x + widthParking, y + heightParking);
     }
     private void number(Graphics2D g2, int number, int x, int y){
-
+        g2.setFont(new Font(Font.MONOSPACED, Font.BOLD, 34));
+        g2.setColor(new Color(146, 76, 43));
+        g2.setStroke(new BasicStroke(4.5f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
+        FontMetrics metrics = getFontMetrics(getFont());
+        int radio = 28;
+        String numberString = String.valueOf(number);
+        g2.drawString(numberString, x +(widthParking >> 1) - (metrics.stringWidth(numberString) >> 1), y + (heightParking >> 1) + (number >= 3 ? metrics.getLeading() : metrics.getHeight()));
+        int y1 = y + heightParking - (radio << 1) - (metrics.getHeight() << 1) + (number >= 3 ?  (metrics.getAscent() << 1) * -1 : metrics.getLeading()) + (number >= 3 ? 13 : 5);
+        g2.draw(new Ellipse2D.Double(x + (widthParking >> 1) - radio + 3 + (metrics.stringWidth(numberString) >> 1), y1, radio << 1, radio << 1));
     }
     @Override
     public void paint(Graphics g) {
