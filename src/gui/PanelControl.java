@@ -48,7 +48,7 @@ public class PanelControl extends JPanel {
         if (carro == null) throw new NullPointerException("No se encuentra carro a añadir");
         else if (enEspera == null || carrosOut == null) throw new NullPointerException("No existe lista para el parqueadero");
         else {
-            enEspera.add(0, carro.toString() + " esperando");
+            enEspera.addElement(carro.toString() + " esperando");
             notificaciones.add(0, carro.toString() + " en espera");
             carrosOut.add(carro);
         }
