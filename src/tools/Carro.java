@@ -1,11 +1,21 @@
 package tools;
-
 import java.awt.*;
-
+import java.util.Objects;
+import java.util.Random;
 public class Carro {
     private Image image;
     private int posicion;
     private String nombre;
+    private int id;
+    private static Random random;
+    static {
+        random = new Random();
+    }
+    public Carro(String nombre, int id, Image image) {
+        this.nombre = nombre;
+        this.id = id;
+        this.image = image;
+    }
     public int getPosicion() {
         return posicion;
     }
@@ -13,25 +23,66 @@ public class Carro {
         this.posicion = posicion;
     }
     public Carro getCarro() {
-        //nextInt
-        return this;
+        switch (random.nextInt(5)) {
+            case 0:
+                return getBlancoRojo();
+            case 1:
+                return getCyan();
+            case 2:
+                return getVerdeAmarillo();
+            case 3:
+                return getVerdeRojo();
+            case 4:
+                return getBlancoNegro();
+            default:
+                return this;
+        }
+    }
+    private Carro getBlancoRojo(){
+        return new Carro(Names.BLANCO_ROJO, ++Colors.BLANCO_ROJO, Objects.requireNonNull(Files.image("/recursos/imagenes/cars/car.png", -1, 30)).getImage());
+    }
+    private Carro getCyan(){
+        return new Carro(Names.CYAN, ++Colors.CYAN, Objects.requireNonNull(Files.image("/recursos/imagenes/cars/car1.png", -1, 30)).getImage());
+    }
+    private Carro getVerdeAmarillo(){
+        return new Carro(Names.VERDE_AMARILLO, ++Colors.VERDE_AMARILLO, Objects.requireNonNull(Files.image("/recursos/imagenes/cars/car2.png", -1, 30)).getImage());
+    }
+    private Carro getVerdeRojo(){
+        return new Carro(Names.VERDE_ROJO, ++Colors.VERDE_ROJO, Objects.requireNonNull(Files.image("/recursos/imagenes/cars/car3.png", -1, 30)).getImage());
+    }
+    private Carro getBlancoNegro(){
+        return new Carro(Names.BLANCO_NEGRO, ++Colors.BLANCO_NEGRO, Objects.requireNonNull(Files.image("/recursos/imagenes/cars/car4.png", -1, 30)).getImage());
     }
     @Override
     public String toString() {
-        return "Carro{" + nombre + '}';
+        return "Carro{" + nombre + " - " + id + '}';
     }
     private static class Colors {
-        protected static int BLANCO_ROJO;
-        protected static int CYAN;
-        protected static int VERDE_AMARILLO;
-        protected static int VERDE_ROJO;
-        protected static int BLANCO_NEGRO;
+        private static int BLANCO_ROJO;
+        private static int CYAN;
+        private static int VERDE_AMARILLO;
+        private static int VERDE_ROJO;
+        private static int BLANCO_NEGRO;
         static {
             BLANCO_ROJO = 0;
             CYAN = 0;
             VERDE_AMARILLO = 0;
             VERDE_ROJO = 0;
             BLANCO_NEGRO = 0;
+        }
+    }
+    private static class Names {
+        private static String BLANCO_ROJO;
+        private static String CYAN;
+        private static String VERDE_AMARILLO;
+        private static String VERDE_ROJO;
+        private static String BLANCO_NEGRO;
+        static {
+            BLANCO_ROJO = "Blanco Rojo";
+            CYAN = "Cyan";
+            VERDE_AMARILLO = "Verde Amarillo";
+            VERDE_ROJO = "Verde Rojo";
+            BLANCO_NEGRO = "Blanco Negro";
         }
     }
 }
