@@ -7,14 +7,19 @@ public class Carro {
     private int posicion;
     private String nombre;
     private int id;
+    private long espera;
     private static Random random;
     static {
         random = new Random();
     }
-    public Carro(String nombre, int id, Image image) {
+    private Carro(String nombre, int id, Image image) {
         this.nombre = nombre;
         this.id = id;
         this.image = image;
+        this.espera = random.nextInt(13257) + 20573;  // entre 20 y 33
+    }
+    public Image getImage() {
+        return image;
     }
     public int getPosicion() {
         return posicion;
@@ -22,7 +27,7 @@ public class Carro {
     public void setPosicion(int posicion) {
         this.posicion = posicion;
     }
-    public Carro getCarro() {
+    public static Carro getCarro() {
         switch (random.nextInt(5)) {
             case 0:
                 return getBlancoRojo();
@@ -35,22 +40,22 @@ public class Carro {
             case 4:
                 return getBlancoNegro();
             default:
-                return this;
+                return null;
         }
     }
-    private Carro getBlancoRojo(){
+    private static Carro getBlancoRojo(){
         return new Carro(Names.BLANCO_ROJO, ++Colors.BLANCO_ROJO, Objects.requireNonNull(Files.image("/recursos/imagenes/cars/car.png", -1, 30)).getImage());
     }
-    private Carro getCyan(){
+    private static Carro getCyan(){
         return new Carro(Names.CYAN, ++Colors.CYAN, Objects.requireNonNull(Files.image("/recursos/imagenes/cars/car1.png", -1, 30)).getImage());
     }
-    private Carro getVerdeAmarillo(){
+    private static Carro getVerdeAmarillo(){
         return new Carro(Names.VERDE_AMARILLO, ++Colors.VERDE_AMARILLO, Objects.requireNonNull(Files.image("/recursos/imagenes/cars/car2.png", -1, 30)).getImage());
     }
-    private Carro getVerdeRojo(){
+    private static Carro getVerdeRojo(){
         return new Carro(Names.VERDE_ROJO, ++Colors.VERDE_ROJO, Objects.requireNonNull(Files.image("/recursos/imagenes/cars/car3.png", -1, 30)).getImage());
     }
-    private Carro getBlancoNegro(){
+    private static Carro getBlancoNegro(){
         return new Carro(Names.BLANCO_NEGRO, ++Colors.BLANCO_NEGRO, Objects.requireNonNull(Files.image("/recursos/imagenes/cars/car4.png", -1, 30)).getImage());
     }
     @Override

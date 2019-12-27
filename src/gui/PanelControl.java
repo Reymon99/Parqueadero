@@ -44,7 +44,7 @@ public class PanelControl extends JPanel {
     private void juego(){
         PanelControl.activo = !PanelControl.activo;
     }
-    private void addCar(Carro carro) throws NullPointerException {
+    public void addCar(Carro carro) throws NullPointerException {
         if (carro == null) throw new NullPointerException("No se encuentra carro a añadir");
         else if (enEspera == null || carrosOut == null) throw new NullPointerException("No existe lista para el parqueadero");
         else {
@@ -60,5 +60,8 @@ public class PanelControl extends JPanel {
         else {
             // lanzar hilo de parkeo
         }
+    }
+    public void updateCarrosFaltantes(){
+        carrosFaltantes.setText("Faltan " + enEspera.size() + " Carro(s)");
     }
 }
