@@ -11,7 +11,7 @@ public class CarGenerator extends Thread {
     @Override
     public void run() {
         Random random = new Random();
-        while (true){
+        while (PanelControl.activo){
             panelControl.addCar(Carro.getCarro());
             panelControl.updateCarrosFaltantes();
             try {
