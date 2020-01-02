@@ -15,7 +15,7 @@ public class CarGenerator extends Thread {
             panelControl.addCar(Carro.getCarro());
             panelControl.updateCarrosFaltantes();
             try {
-                Thread.sleep(random.nextInt(10050) + 13250); // entre 13 y 23 segundos de espera
+                Thread.sleep(random.nextInt(9754) + 2003); // entre 2 y 11.8 segundos de espera
             } catch (InterruptedException e) {
                 JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             }

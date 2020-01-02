@@ -1,14 +1,19 @@
 package tools;
+import hilos.Parquear;
 import java.awt.*;
 import java.util.Objects;
 import java.util.Random;
 public class Carro {
+    private final Parquear parquear;
     private Image image;
     private int posicion;
     private String nombre;
     private int id;
     private long espera;
-    private static Random random;
+    private static final Random random;
+    {
+        parquear = new Parquear(/* this */);
+    }
     static {
         random = new Random();
     }
@@ -26,6 +31,9 @@ public class Carro {
     }
     public void setPosicion(int posicion) {
         this.posicion = posicion;
+    }
+    public void start(){
+        parquear.start();
     }
     public static Carro getCarro() {
         switch (random.nextInt(5)) {

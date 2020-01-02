@@ -1,8 +1,11 @@
 package gui;
+import hilos.CarGenerator;
 import tools.Carro;
 import tools.ParkingSpaceFullException;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.LinkedList;
 public class PanelControl extends JDialog {
     public static boolean activo;
@@ -29,7 +32,12 @@ public class PanelControl extends JDialog {
         setTitle("Panel de Control");
         setLocation(20, 50);
         getContentPane().setLayout(new GridBagLayout());
-        setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                System.exit(0);
+            }
+        });
         init();
         pack();
     }
@@ -41,10 +49,18 @@ public class PanelControl extends JDialog {
         start.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 16));
         end.setFont(start.getFont());
         start.addActionListener((e) -> {
+            start.setEnabled(false);
+            end.setEnabled(true);
             juego();
+            new CarGenerator(PanelControl.this).start();
             //lanzar hilo principal acá, que a la vez ese hilo lanzará los multiples hilos que controlarán los automoviles en el estacionamiento
         });
-        end.addActionListener((e) -> juego());
+        end.addActionListener((e) -> {
+            juego();
+            start.setEnabled(true);
+            end.setEnabled(false);
+        });
+        end.setEnabled(false);
         final JList<String> espera = new JList<>(enEspera);
         final JList<String> notify = new JList<>(notificaciones);
         espera.setBorder(BorderFactory.createTitledBorder("En Espera"));
@@ -75,7 +91,7 @@ public class PanelControl extends JDialog {
         if (carro == null) throw new NullPointerException("No se encuentra carro a añadir");
         else if (enEspera == null || carrosOut == null) throw new NullPointerException("No existe lista para el parqueadero");
         else {
-            enEspera.addElement(carro.toString() + " esperando");
+            enEspera.addElement(carro.toString());
             notificaciones.add(0, carro.toString() + " en espera");
             carrosOut.add(carro);
         }
