@@ -6,28 +6,23 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.LinkedList;
 public class PanelControl extends JDialog {
     public static boolean activo;
-    private final DefaultListModel<String> enEspera;
+    private final DefaultListModel<Carro> enEspera;
     private final DefaultListModel<String> notificaciones;
     private JLabel carrosFaltantes;
     private JLabel carrosParqueados;
-    private JLabel carrosDespachados;//el se del contador solo anidar el número al mensaje preescrito
-    private final LinkedList<Carro> carrosOut;
-    private final Carro[] carrosIn;
-    public static int despachados;
+    private JLabel carrosDespachados;
+    private static PanelControl panelControl;
     {
         enEspera = new DefaultListModel<>();
         notificaciones = new DefaultListModel<>();
-        carrosOut = new LinkedList<>();
-        carrosIn = new Carro[6];
     }
     static {
         activo = false;
-        despachados = 0;
+        panelControl = null;
     }
-    public PanelControl(JFrame frame){
+    private PanelControl(JFrame frame){
         super(frame);
         setTitle("Panel de Control");
         setLocation(20, 50);
@@ -40,6 +35,14 @@ public class PanelControl extends JDialog {
         });
         init();
         pack();
+    }
+    public static PanelControl getInstance(JFrame frame) throws NullPointerException {
+        if (panelControl == null && frame != null) panelControl = new PanelControl(frame);
+        else if (panelControl == null) throw new NullPointerException("Frame not found");
+        return panelControl;
+    }
+    public static PanelControl getInstance() {
+        return getInstance(null);
     }
     private void init(){
         final JButton start = new JButton("Iniciar");
@@ -61,7 +64,7 @@ public class PanelControl extends JDialog {
             end.setEnabled(false);
         });
         end.setEnabled(false);
-        final JList<String> espera = new JList<>(enEspera);
+        final JList<Carro> espera = new JList<>(enEspera);
         final JList<String> notify = new JList<>(notificaciones);
         espera.setBorder(BorderFactory.createTitledBorder("En Espera"));
         notify.setBorder(BorderFactory.createTitledBorder("Notificaciones"));
@@ -73,9 +76,7 @@ public class PanelControl extends JDialog {
         carrosFaltantes.setFont(new Font(Font.MONOSPACED, Font.BOLD, 20));
         carrosParqueados.setFont(carrosFaltantes.getFont());
         carrosDespachados.setFont(carrosFaltantes.getFont());
-        updateCarrosFaltantes();
-        updateCarrosParqueados();
-        updateCarrosDespachados();
+        updateCarros();
         Constrains.addCompX(start, getContentPane(), new Rectangle(0, 0, 1, 1), 1, new Insets(15, 15, 5, 15), GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL);
         Constrains.addCompX(end, getContentPane(), new Rectangle(0, 1, 1, 1), 1, new Insets(5, 15, 10, 15), GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL);
         Constrains.addComp(new JScrollPane(espera), getContentPane(), new Rectangle(0, 2, 1, 1), 1, 4, new Insets(10, 15, 10, 15), GridBagConstraints.CENTER, GridBagConstraints.BOTH);
@@ -89,17 +90,16 @@ public class PanelControl extends JDialog {
     }
     public void addCar(Carro carro) throws NullPointerException {
         if (carro == null) throw new NullPointerException("No se encuentra carro a añadir");
-        else if (enEspera == null || carrosOut == null) throw new NullPointerException("No existe lista para el parqueadero");
+        else if (enEspera == null) throw new NullPointerException("No existe lista para el parqueadero");
         else {
-            enEspera.addElement(carro.toString());
+            enEspera.addElement(carro);
             notificaciones.add(0, carro.toString() + " en espera");
-            carrosOut.add(carro);
         }
     }
     private void addCarParking(Carro carro) throws NullPointerException, ParkingSpaceFullException {
         if (carro == null) throw new NullPointerException("No se encuentra carro a añadir");
-        else if (carrosIn == null) throw new NullPointerException("No existe Parqueadero");
-        else if (carrosIn[carro.getPosicion()] != null) throw new ParkingSpaceFullException(carrosIn[carro.getPosicion()], carro, carrosIn);
+        else if (Parqueadero.getInstance().getCarros() == null) throw new NullPointerException("No existe Parqueadero");
+        else if (Parqueadero.getInstance().getCarros()[carro.getPosicion()] != null) throw new ParkingSpaceFullException(Parqueadero.getInstance().getCarros()[carro.getPosicion()], carro, Parqueadero.getInstance().getCarros());
         else {
             // lanzar hilo de parkeo
         }
@@ -109,10 +109,15 @@ public class PanelControl extends JDialog {
     }
     public void updateCarrosParqueados(){
         int i = 0;
-        for (Carro carro : carrosIn) if (carro != null) i++;
+        for (Carro carro : Parqueadero.getInstance().getCarros()) if (carro != null) i++;
         carrosParqueados.setText("Carros Parqueados: " + i);
     }
     public void updateCarrosDespachados(){
-        carrosDespachados.setText("Carros Despachados: " + PanelControl.despachados);
+        carrosDespachados.setText("Carros Despachados: " + Parqueadero.despachados);
+    }
+    public void updateCarros() {
+        updateCarrosFaltantes();
+        updateCarrosParqueados();
+        updateCarrosDespachados();
     }
 }

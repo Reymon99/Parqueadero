@@ -1,22 +1,47 @@
 package gui;
+import tools.Carro;
 import tools.Files;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.Ellipse2D;
 import java.util.Objects;
 public class Parqueadero extends JPanel {
-    private boolean lleno;
+    public static int despachados;
+    public static boolean disponibleIn; // para saber si alguien está entrando al parqueadero a estacionarse
+    public static boolean disponibleOut; // para saber si alguien está saliendo del parqueadero
     private final int widthParking;
     private final int heightParking;
+    private final Carro[] carros;
+    private static Parqueadero parqueadero;
     {
         widthParking = 170;
         heightParking = 120;
+        carros = new Carro[6];
     }
-    public Parqueadero(){
+    static {
+        despachados = 0;
+        disponibleIn = true;
+        disponibleOut = true;
+    }
+    private Parqueadero(){
         setMinimumSize(new Dimension(1000, 500));
         setMaximumSize(getMinimumSize());
         setPreferredSize(getMinimumSize());
         setBorder(BorderFactory.createLineBorder(Color.BLACK));
+    }
+    public static Parqueadero getInstance() {
+        if (parqueadero == null) parqueadero = new Parqueadero();
+        return parqueadero;
+    }
+    public boolean isLleno() {
+        for(Carro carro : carros) if (carro == null) return false;
+        return true;
+    }
+    public Carro[] getCarros() {
+        return carros;
+    }
+    public void setCarro(int pos, Carro carro) {
+        carros[pos] = carro;
     }
     /**
      * @param percentage 0% - 100%
@@ -83,6 +108,13 @@ public class Parqueadero extends JPanel {
         int y1 = y + heightParking - (radio << 1) - (metrics.getHeight() << 1) + (number >= 3 ?  (metrics.getAscent() << 1) * -1 : metrics.getLeading()) + (number >= 3 ? 13 : 5);
         g2.draw(new Ellipse2D.Double(x + (widthParking >> 1) - radio + 3 + (metrics.stringWidth(numberString) >> 1), y1, radio << 1, radio << 1));
     }
+    /**
+     * dibuja los carros que están dentro del parqueadero
+     * @param g2 pincel
+     */
+    private void parquear(Graphics2D g2) {
+        for(Carro carro : carros) if (carro != null) g2.drawImage(Objects.requireNonNull(carro.getImage(), "Imagen No Encontrada"), carro.getPoint().x, carro.getPoint().y, this);
+    }
     @Override
     public void paint(Graphics g) {
         super.paint(g);
@@ -91,5 +123,6 @@ public class Parqueadero extends JPanel {
         doors(g2);
         lines(g2);
         parkingSpaces(g2);
+        parquear(g2);
     }
 }

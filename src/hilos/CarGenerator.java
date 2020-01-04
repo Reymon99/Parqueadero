@@ -4,16 +4,12 @@ import tools.Carro;
 import javax.swing.*;
 import java.util.Random;
 public class CarGenerator extends Thread {
-    private PanelControl panelControl;
-    public CarGenerator(PanelControl panelControl) {
-        this.panelControl = panelControl;
-    }
     @Override
     public void run() {
         Random random = new Random();
         while (PanelControl.activo){
-            panelControl.addCar(Carro.getCarro());
-            panelControl.updateCarrosFaltantes();
+            PanelControl.getInstance().addCar(Carro.getCarro());
+            PanelControl.getInstance().updateCarrosFaltantes();
             try {
                 Thread.sleep(random.nextInt(9754) + 2003); // entre 2 y 11.8 segundos de espera
             } catch (InterruptedException e) {
